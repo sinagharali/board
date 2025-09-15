@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  openfga:
+    image: openfga/openfga:latest
+    container_name: openfga
+    command: run
+    ports:
+      - "8080:8080" # API
+      - "8081:3000" # Playgrounds
+    environment:
+      OPENFGA_DATASTORE_ENGINE: postgres
+      OPENFGA_DATASTORE_URI: postgres://postgres:test1234!@postgres:5432/openfga_db?sslmode=disable
+      OPENFGA_LOG_LEVEL: info
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: openfga_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test1234!
+      POSTGRES_DB: openfga_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

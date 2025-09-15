@@ -1,0 +1,62 @@
+name: board
+description: 'Store ID: 01K4AC2GATV56RPCJTVFYE4J7E'
+model: |
+  model
+    schema 1.1
+
+  type user
+
+  type board
+    relations
+      define can_assign_manager: owner
+      define can_change_owner: owner
+      define can_invite: owner or manager
+      define manager: [user]
+      define member: [user]
+      define owner: [user]
+
+  type note
+    relations
+      define board: [board]
+      define can_delete: creator
+      define can_edit: creator or owner from board or manager from board
+      define can_view: [board#member]
+      define creator: [board#member]
+tuples:
+  - user: user:anne
+    relation: owner
+    object: board:123
+    condition: null
+  - user: user:bob
+    relation: member
+    object: board:123
+    condition: null
+  - user: user:anne
+    relation: creator
+    object: note:124
+    condition: null
+  - user: board:123
+    relation: board
+    object: note:124
+    condition: null
+  - user: board:123#member
+    relation: can_view
+    object: note:124
+    condition: null
+  - user: user:83198f00-60ea-4d75-be42-0a2e0ac176e2
+    relation: owner
+    object: board:73fc6827-8c90-4f1d-b877-461d1e5209d9
+    condition: null
+tests:
+  - name: Tests
+    check:
+      - user: user:bob
+        object: note:124
+        assertions:
+          creator: true
+          can_view: true
+      - user: user:anne
+        object: board:123
+        assertions:
+          can_invite: true
+          can_assign_manager: true

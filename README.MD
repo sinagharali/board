@@ -1,6 +1,6 @@
 # Project Name
 
-Board
+Board (THIS PROJECT IS STILL UNDER DEVELOPMENT.)
 
 ## Introduction
 

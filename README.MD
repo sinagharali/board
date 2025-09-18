@@ -103,8 +103,6 @@ For authorization model design based on the tutoial the openfga recommend (the w
 
 - A user can perform the action change information on a board if they are the owner of the board or they are an admin with change_info permission.
 
-- A user can perform the action invite users to a board if they are the owner or an admin with invite_users permission.
-
 - A user can perform the action add admins to a board if they are the owner or an admin with add_admins permission.
 
 - A user can perform the action remove a member from a board if they are the owner or an admin with remove_member permission.
@@ -112,8 +110,6 @@ For authorization model design based on the tutoial the openfga recommend (the w
 - A user can perform the action remove an admin from a board if they are the owner.
 
 - A user can perform the action view a board if they are the owner or a member of the board.
-
-- A user can perform the action join a board if they are invited to the board.
 
 - A user can perform the action become a member of a board after joining or being added by an owner/admin.
 
@@ -130,6 +126,18 @@ For authorization model design based on the tutoial the openfga recommend (the w
 - A user can perform the action delete a note if they are the creator of the note or have manage_notes permission on the board.
 
 - A user becomes the creator of a note when they create it, and must be a member of the board.
+
+#### Invitation Features
+
+- A user can be the invitee in an invitation if they are a user.
+
+- A user can be the invited_by in an invitation if they are a user and have invite_users permission from the board.
+
+- A user can delete an invitation if they are the invited_by or the owner of the board.
+
+- A user can join a board through an invitation if they are the invitee.
+
+- A user can reject an invitation if they are the invitee.
 
 ### DSL Authorization Model:
 
@@ -154,15 +162,21 @@ type board
     define member: [user]
     define view: owner or member
 
-    define invited: [user]
-    define join: invited
-
     define can_create_note: member or owner
 
     define change_info: ([user] and admin) or owner
     define manage_notes: ([user] and admin) or owner
     define invite_users: ([user] and admin) or owner
     define add_admins: ([user] and admin) or owner
+
+type invitation
+  relations
+    define board: [board]
+    define invitee: [user]
+    define invited_by : [user] and invite_users from board
+    define can_delete : invited_by or owner from board
+    define join: invitee
+    define reject: invitee
 
 type note
   relations

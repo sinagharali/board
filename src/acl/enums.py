@@ -15,8 +15,6 @@ class Relation(str, Enum):
     CHANGE_INFO = "change_info"
     CHANGE_OWNERSHIP = "change_ownership"
     INVITE_USERS = "invite_users"
-    INVITED = "invited"
-    JOIN = "join"
     MANAGE_NOTES = "manage_notes"
     MEMBER = "member"
     OWNER = "owner"
@@ -30,6 +28,14 @@ class Relation(str, Enum):
     CAN_DELETE = "can_delete"
     CAN_EDIT = "can_edit"
     CAN_VIEW = "can_view"
+
+    # Invitation Relations
+    # BOARD = "board"  --I put it there just for consistancy--
+    INVITEE = "invitee"
+    INVITED_BY = "invited_by"
+    JOIN = "join"
+    REJECT = "reject"
+    # CAN_DELETE = "can_delete"
 
 
 OBJECT_RELATION_MAP = {
@@ -57,4 +63,12 @@ OBJECT_RELATION_MAP = {
         Relation.CAN_VIEW,
     ],
     ObjectType.USER: [],
+    ObjectType.INVITATION: [
+        Relation.BOARD,
+        Relation.INVITEE,
+        Relation.INVITED_BY,
+        Relation.JOIN,
+        Relation.REJECT,
+        Relation.CAN_DELETE,
+    ],
 }

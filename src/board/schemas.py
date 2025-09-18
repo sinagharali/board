@@ -15,3 +15,8 @@ class CreateBoardDto(BaseSchema):
 class UpdateBoardDto(BaseSchema):
     name: str | None
     caption: str | None
+
+    __validators__ = {  # noqa: RUF012
+        "name": [is_not_empty(), min_length(3), max_length(50)],
+        "caption": [is_not_empty(), max_length(255)],
+    }

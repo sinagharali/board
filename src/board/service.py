@@ -8,17 +8,18 @@ from acl.errors import ACLError, ACLErrors
 from acl.openfga_authorization import AuthorizationService
 from board.errors import BoardError, BoardErrors
 from board.model import Board
+from board.repository import BoardRepository
 from board.schemas import CreateBoardDto, UpdateBoardDto
 from bucket.aws_service import BucketService
 from common.validators.file import validate_image
-from database.base_repo import BaseRepository
+from logger import logger
 from user.model import User
 
 
 class BoardService:
     def __init__(
         self,
-        board_repo: BaseRepository,
+        board_repo: BoardRepository,
         authorization_service: AuthorizationService,
         bucket_service: BucketService,
     ):
@@ -128,7 +129,7 @@ class BoardService:
         # upload the new avatar
         file_name = f"Board-{uuid4()}"
 
-        await self.bucket_service.upload_file(avatar, file_name)
+        await self.bucket_service.upload_file(avatar.file, file_name)
 
         # update the board
         board.avatar = file_name
@@ -158,6 +159,13 @@ class BoardService:
         if not board.avatar:
             return {"message": "avatar is already empty"}
 
+        logger.debug("Passed the acl and board is found.")
+
         # Delete the avatar
         await self.bucket_service.delete_file(board.avatar)
-        return None
+
+        # Remove avatar field's value from the board
+        board.avatar = None
+        await self.board_repo.update(board)
+
+        return {"message": "avatar deleted successfully"}

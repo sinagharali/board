@@ -14,6 +14,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "s
 from session.model import Session
 from user.model import User
 from board.model import Board
+from membership.model import Membership
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

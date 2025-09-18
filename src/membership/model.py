@@ -23,7 +23,14 @@ class Membership(BaseORM, table=True):
     Mmebership Model.
 
     Fields:
-    - **id_** : Primary key (UUID)
+    - **member_id** : Primary key (UUID) and Foriegn key (UUID)
+    - **member** : User
+    - **board_id** : Primary key (UUID) and Foriegn key (UUID)
+    - **board** : Board
+    - **role** : Role (MembershipRole) either member or admin
+    - **created_at** : When Membership Model is Created (DateTime)
+    - **updated_at** : When Membership Model is Updated (DateTime)
+
     """
 
     __tablename__: str = "memberships"

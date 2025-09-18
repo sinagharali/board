@@ -129,9 +129,9 @@ For authorization model design based on the tutoial the openfga recommend (the w
 
 #### Invitation Features
 
-- A user can be the invitee in an invitation if they are a user.
+- A user can view the invitation if they are the invitee or they are the invited_by or the owner of the board.
 
-- A user can be the invited_by in an invitation if they are a user and have invite_users permission from the board.
+- A user can create invitation if they are a user and have invite_users permission from the board.
 
 - A user can delete an invitation if they are the invited_by or the owner of the board.
 

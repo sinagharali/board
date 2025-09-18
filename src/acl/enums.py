@@ -36,6 +36,7 @@ class Relation(str, Enum):
     JOIN = "join"
     REJECT = "reject"
     # CAN_DELETE = "can_delete"
+    # VIEW = "view"
 
 
 OBJECT_RELATION_MAP = {
@@ -70,5 +71,6 @@ OBJECT_RELATION_MAP = {
         Relation.JOIN,
         Relation.REJECT,
         Relation.CAN_DELETE,
+        Relation.VIEW,
     ],
 }

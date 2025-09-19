@@ -5,6 +5,7 @@ class ObjectType(str, Enum):
     BOARD = "board"
     USER = "user"
     NOTE = "note"
+    INVITATION = "invitation"
 
 
 class Relation(str, Enum):
@@ -47,8 +48,6 @@ OBJECT_RELATION_MAP = {
         Relation.CHANGE_INFO,
         Relation.CHANGE_OWNERSHIP,
         Relation.INVITE_USERS,
-        Relation.INVITED,
-        Relation.JOIN,
         Relation.MANAGE_NOTES,
         Relation.MEMBER,
         Relation.OWNER,

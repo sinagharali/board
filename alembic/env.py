@@ -15,6 +15,7 @@ from session.model import Session
 from user.model import User
 from board.model import Board
 from membership.model import Membership
+from invitation.model import Invitation
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -56,6 +56,7 @@ class BoardService:
             new_board.id_,
             ObjectType.BOARD,
             Relation.OWNER,
+            ObjectType.USER,
         )
 
         # Return the created board.
@@ -67,11 +68,8 @@ class BoardService:
         user: User,
         dto: UpdateBoardDto,
     ):
-        # Check if we have a board with this id or not.
-        board = await self.board_repo.get(Board, board_id)
-
-        if not board:
-            raise BoardError(BoardErrors.BOARD_NOT_FOUND)
+        # Ensure we have a board with this id or not.
+        board = await self.ensure_board_exists(board_id)
 
         # Check the ability that user can edit board or not.
         can = await self.authorization_service.can(
@@ -106,11 +104,8 @@ class BoardService:
     ):
         # Check is avatar valid or not.
         await validate_image(avatar)
-        # Check if we have a board with this id or not.
-        board = await self.board_repo.get(Board, board_id)
-
-        if not board:
-            raise BoardError(BoardErrors.BOARD_NOT_FOUND)
+        # Ensure we have a board with this id or not.
+        board = await self.ensure_board_exists(board_id)
 
         # Check the ability that user can edit board or not.
         can = await self.authorization_service.can(
@@ -140,11 +135,8 @@ class BoardService:
         board_id: UUID,
         user: User,
     ):
-        # Check if we have a board with this id or not.
-        board = await self.board_repo.get(Board, board_id)
-
-        if not board:
-            raise BoardError(BoardErrors.BOARD_NOT_FOUND)
+        # Ensure we have a board with this id or not.
+        board = await self.ensure_board_exists(board_id)
 
         # Check the ability that user can edit board or not.
         can = await self.authorization_service.can(
@@ -169,3 +161,11 @@ class BoardService:
         await self.board_repo.update(board)
 
         return {"message": "avatar deleted successfully"}
+
+    async def ensure_board_exists(self, board_id):
+        board = await self.board_repo.get(Board, board_id)
+
+        if not board:
+            raise BoardError(BoardErrors.BOARD_NOT_FOUND)
+
+        return board

@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
@@ -10,7 +10,7 @@ from invitation.schemas import CreateInvitationDto
 from invitation.service import InvitationService
 from user.model import User
 
-router = APIRouter(prefix="/boards", tags=["Invitation"])
+router = APIRouter(tags=["Invitation"])
 
 
 @cbv(router)
@@ -24,7 +24,7 @@ class InvitationCBV:
     ):
         self.invitation_service = invitation_service
 
-    @router.post("/{board_id}/invites")
+    @router.post("/boards/{board_id}/invites")
     async def create_invitation(
         self,
         board_id: UUID,
@@ -33,7 +33,7 @@ class InvitationCBV:
     ):
         return await self.invitation_service.create_invitation(dto, user, board_id)
 
-    @router.delete("/{board_id}/invites/{invitation_id}")
+    @router.delete("/boards/{board_id}/invites/{invitation_id}")
     async def delete_invitation(
         self,
         board_id: UUID,
@@ -46,7 +46,7 @@ class InvitationCBV:
             user,
         )
 
-    @router.patch("/{board_id}/invites/{invitation_id}/accept")
+    @router.patch("/boards/{board_id}/invites/{invitation_id}/accept")
     async def accept_invitation(
         self,
         board_id: UUID,
@@ -59,7 +59,7 @@ class InvitationCBV:
             invitation_id,
         )
 
-    @router.delete("/{board_id}/invites/{invitation_id}/reject")
+    @router.delete("/boards/{board_id}/invites/{invitation_id}/reject")
     async def reject_invitation(
         self,
         board_id: UUID,
@@ -72,17 +72,25 @@ class InvitationCBV:
             invitation_id,
         )
 
-    @router.get("/{board_id}/invites/{invite_id}/")
-    async def get_invitation(
+    @router.get("/boards/{board_id}/invites/{invite_id}/")
+    async def get_specific_invitation(
         self,
         board_id: UUID,
         invite_id: UUID,
         user: Annotated[User, Depends(get_current_user)],
     ): ...
 
-    @router.get("/{board_id}/invites/")
-    async def get_pending_invitations(
+    @router.get("/boards/{board_id}/invites/")
+    async def get_invitations(
         self,
         board_id: UUID,
         user: Annotated[User, Depends(get_current_user)],
+    ): ...
+
+    @router.get("/invites/received/")
+    async def get_received_invitations(
+        self,
+        user: Annotated[User, Depends(get_current_user)],
+        limit: int = 50,
+        offset: int = 0,
     ): ...

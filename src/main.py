@@ -8,6 +8,7 @@ from board.api.v1.router import router as board_router
 from core.error_handler import register_exception_handlers
 from invitation.api.v1.router import router as invitation_router
 from logger import logger
+from membership.api.v1.router import router as membership_router
 
 
 @asynccontextmanager
@@ -22,6 +23,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(board_router)
 app.include_router(invitation_router)
+app.include_router(membership_router)
 
 register_exception_handlers(app)
 logger.info("Starting API...")
